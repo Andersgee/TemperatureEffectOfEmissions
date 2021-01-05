@@ -1,0 +1,33 @@
+{
+  "name": "temperatureeffectofemissions",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "@material-ui/core": "latest",
+    "@material-ui/icons": "latest",
+    "@material-ui/styles": "latest",
+    "chart.js": "^2.9.4",
+    "gatsby": "latest",
+    "gatsby-image": "latest",
+    "gatsby-plugin-manifest": "^2.9.1",
+    "gatsby-plugin-material-ui": "latest",
+    "gatsby-plugin-react-helmet": "latest",
+    "gatsby-plugin-sharp": "latest",
+    "gatsby-source-filesystem": "latest",
+    "gatsby-transformer-sharp": "latest",
+    "react": "latest",
+    "react-chartjs-2": "^2.11.1",
+    "react-color": "^2.19.3",
+    "react-dom": "latest",
+    "react-fetch-hook": "^1.8.5",
+    "react-helmet": "latest",
+    "react-redux": "^7.2.2",
+    "redux": "^4.0.5",
+    "xlsx": "^0.16.9"
+  },
+  "scripts": {
+    "develop": "gatsby develop",
+    "build": "gatsby build",
+    "serve": "gatsby serve"
+  }
+}
