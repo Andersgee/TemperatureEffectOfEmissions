@@ -1,10 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
 //import { defaults, Line } from "react-chartjs-2";
 import { Line } from "react-chartjs-2";
-import { Typography, Box } from "@material-ui/core";
+import { Box } from "@material-ui/core";
 import TooltipMoving from "./TooltipMoving";
 import { withState } from "../../state";
-import { makeplotdata } from "../../js/rfe1";
+import { makeplotdata } from "../../js/deltatemp";
+import Settings from "./Settings";
 
 function makeoptions(customtooltip) {
   return {
@@ -16,7 +17,7 @@ function makeoptions(customtooltip) {
     scales: {
       yAxes: [
         {
-          stacked: true,
+          stacked: false,
           position: "left",
           scaleLabel: {
             display: true,
@@ -61,12 +62,16 @@ function makeoptions(customtooltip) {
 function LineChart(props) {
   const { data, plotcolors } = props.state;
 
+  const [startyear, setStartyear] = useState(0);
+  const [percentage, setPercentage] = useState(-5);
+
   const [plotdata, setPlotdata] = useState(null);
   useEffect(() => {
     if (data) {
-      setPlotdata(makeplotdata(data, plotcolors));
+      console.log("startyear: ", startyear);
+      setPlotdata(makeplotdata(data, plotcolors, startyear, percentage));
     }
-  }, [data, plotcolors]);
+  }, [data, plotcolors, startyear, percentage]);
 
   const boxref = useRef();
   const [datapoints, setDatapoints] = useState(null);
@@ -95,6 +100,7 @@ function LineChart(props) {
 
   return (
     <Box mt={3}>
+      <Settings setStartyear={setStartyear} setPercentage={setPercentage} />
       <Box
         position="relative"
         ref={boxref}
@@ -107,7 +113,7 @@ function LineChart(props) {
           xy={mousexy}
           datapoints={datapoints}
           indexlabels={indexlabels}
-          indexcolors={plotcolors}
+          //indexcolors={props.state.plotcolors}
         />
         <Line data={plotdata} options={options} />
       </Box>

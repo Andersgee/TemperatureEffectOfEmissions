@@ -1,20 +1,4 @@
-const E = (v, x) => v * Math.pow(10, x);
-
-//numbers from from article "Equivalence of greenhouse-gas emissions for peak temperature limits"
-const gasdict = {
-  CO2: {
-    longlived: true,
-    k: E(4.32, -13),
-  },
-  N2O: {
-    longlived: true,
-    k: E(1330, -13),
-  },
-  CH4: {
-    longlived: false,
-    k: E(1.74, -9),
-  },
-};
+import { ghgs } from "./ghgs";
 
 function cumsum(v) {
   let res = new Array(v.length);
@@ -34,16 +18,45 @@ function vecmul(v, k) {
   return res;
 }
 
-export default function rfe(gasname, tons) {
-  if (!gasdict.hasOwnProperty(gasname)) {
+export function rfe(gasname, tons) {
+  if (!ghgs.hasOwnProperty(gasname)) {
     alert(`the gas ${gasname} is not supported`);
     return [];
   }
 
-  const factor = gasdict[gasname].k;
-  if (gasdict[gasname].longlived) {
+  const factor = ghgs[gasname].k;
+  if (ghgs[gasname].longlived) {
     return vecmul(cumsum(tons), factor);
   } else {
     return vecmul(tons, factor);
   }
+}
+
+const randomhex = () => `#${Math.floor(Math.random() * 16777215).toString(16)}`;
+
+export function makeplotdata(data, colors) {
+  const datasets = [];
+  for (let i = 0; i < data.headings.length; i++) {
+    let rh = randomhex();
+    datasets.push({
+      label: data.headings[i],
+      data: rfe(data.gasnames[i], data.rawdata[i]),
+      borderColor: colors[i] || rh,
+      backgroundColor: colors[i] || rh,
+      pointBackgroundColor: "rgba(0,0,0, 0.0)",
+      pointBorderColor: "rgba(0,0,0, 0.0)",
+      fill: "-1",
+    });
+  }
+  datasets[0].fill = "origin"; //special first
+
+  const alldata = {
+    //headings: data.headings, //not needed for plot but maybe for convenience later
+    labels: data.year,
+    datasets: datasets,
+  };
+
+  console.log("makeplotdata, alldata: ", alldata);
+
+  return alldata;
 }
