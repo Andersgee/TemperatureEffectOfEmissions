@@ -8,18 +8,23 @@ import Colorpickers from "./Colorpickers";
 import UploadButton from "./UploadButton";
 import DownloadButton from "./DownloadButton";
 import ColorPaletteButton from "./ColorPaletteButton";
+import GasCheckboxes from "./GasCheckboxes";
 
 function Layout(props) {
-  const { data } = props.state;
+  const { data, parseddata } = props.state;
   const { setState } = props;
   const defaultdata = useDefaultData();
   const [showpickers, setShowpickers] = useState(false);
 
   useEffect(() => {
     if (!defaultdata.isLoading) {
-      setState({ data: defaultdata.data });
+      setState({ parseddata: defaultdata.data });
     }
-  }, [defaultdata, setState]);
+  }, [defaultdata]);
+
+  useEffect(() => {
+    setState({ data: parseddata });
+  }, [parseddata]);
 
   const togglepickers = () => {
     setShowpickers(!showpickers);
@@ -33,9 +38,9 @@ function Layout(props) {
           {data ? `now viewing ${data.filename}` : "No plot data"}
         </Typography>
       </Box>
-
       {data && (
         <Box my={2}>
+          <GasCheckboxes />
           <Box display="flex" justifyContent="space-between">
             <ColorPaletteButton onClick={togglepickers} />
             <DownloadButton />

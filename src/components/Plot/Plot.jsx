@@ -33,8 +33,12 @@ function makeoptions(customtooltip) {
             fontSize: 18,
           },
           ticks: {
-            minRotation: 90,
+            minRotation: 0,
+            maxRotation: 0,
             //callback: function (value, index, values) {return value % 2 === 0 ? value : "";},
+            callback: (value, index, values) => {
+              return index % 2 === 0 ? value : null;
+            },
           },
         },
       ],
@@ -109,7 +113,7 @@ function LineChart(props) {
           indexlabels={indexlabels}
           indexcolors={plotcolors}
         />
-        <Line data={plotdata} options={options} />
+        {plotdata && <Line data={plotdata} options={options} />}
       </Box>
     </Box>
   );

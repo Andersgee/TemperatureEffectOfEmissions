@@ -115,7 +115,7 @@ function LineChart(props) {
           indexlabels={indexlabels}
           //indexcolors={props.state.plotcolors}
         />
-        <Line data={plotdata} options={options} />
+        {plotdata && <Line data={plotdata} options={options} />}
       </Box>
     </Box>
   );
