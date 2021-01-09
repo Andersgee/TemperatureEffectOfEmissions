@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Container, Box, Typography } from "@material-ui/core";
+import { Container, Box, Grid, Typography } from "@material-ui/core";
 import Plot from "./Plot";
 import TemperaturePlot from "./TemperaturePlot";
 import useDefaultData from "../hooks/useData";
@@ -9,6 +9,7 @@ import UploadButton from "./UploadButton";
 import DownloadButton from "./DownloadButton";
 import ColorPaletteButton from "./ColorPaletteButton";
 import GasCheckboxes from "./GasCheckboxes";
+import Xlim from "./Xlim";
 
 function Layout(props) {
   const { data, parseddata } = props.state;
@@ -40,7 +41,14 @@ function Layout(props) {
       </Box>
       {data && (
         <Box my={2}>
-          <GasCheckboxes />
+          <Grid container spacing={4}>
+            <Grid item>
+              <GasCheckboxes />
+            </Grid>
+            <Grid item>
+              <Xlim />
+            </Grid>
+          </Grid>
           <Box display="flex" justifyContent="space-between">
             <ColorPaletteButton onClick={togglepickers} />
             <DownloadButton />
@@ -48,7 +56,7 @@ function Layout(props) {
 
           <Plot />
           {showpickers && <Colorpickers headings={data.headings} />}
-          <TemperaturePlot />
+          {/*<TemperaturePlot />*/}
         </Box>
       )}
     </Container>

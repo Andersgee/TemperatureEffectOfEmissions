@@ -20,7 +20,8 @@ function columndata(parsed) {
     }
   }
 
-  const cdata = { headings, gasnames, year, rawdata };
+  const xlim = [0, year.length];
+  const cdata = { headings, gasnames, year, rawdata, xlim };
   return cdata;
 }
 

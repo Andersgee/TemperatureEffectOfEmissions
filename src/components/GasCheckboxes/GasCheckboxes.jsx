@@ -17,11 +17,10 @@ function anytrue(x) {
 
 function filterdata(parseddata, checked) {
   const data = {
-    filename: parseddata.filename,
+    ...parseddata,
     gasnames: parseddata.gasnames.filter((d, i) => checked[i]),
     headings: parseddata.headings.filter((d, i) => checked[i]),
     rawdata: parseddata.rawdata.filter((d, i) => checked[i]),
-    year: parseddata.year,
   };
   return data;
 }
