@@ -3,6 +3,18 @@ import { Box, Typography } from "@material-ui/core";
 import { withState } from "../../state";
 import Checkbox from "@material-ui/core/Checkbox";
 
+function trues(N) {
+  return new Array(N).fill(true);
+}
+
+function copy(x) {
+  return x.slice(0);
+}
+
+function anytrue(x) {
+  return x.some((b) => b == true);
+}
+
 function filterdata(parseddata, checked) {
   const data = {
     filename: parseddata.filename,
@@ -17,26 +29,30 @@ function filterdata(parseddata, checked) {
 function GasCheckboxes(props) {
   const { parseddata } = props.state;
   const { setState } = props;
-  const [checked, setChecked] = useState([true, true, true, true]);
+
+  const Ngases = parseddata ? parseddata.headings.length : 0;
+  const [checked, setChecked] = useState(trues(Ngases));
 
   const handleChange = (i) => (event) => {
-    const newchecked = checked.slice(0);
+    const newchecked = copy(checked);
     newchecked[i] = event.target.checked;
-    console.log("newchecked: ", newchecked);
-    setChecked(newchecked);
+    //forbid unchecking everything
+    if (anytrue(newchecked)) setChecked(newchecked);
   };
 
   useEffect(() => {
-    if (checked.some((b) => b == true)) {
-      console.log("checked changed, parseddata: ", parseddata);
-      const newdata = filterdata(parseddata, checked);
-      setState({ data: newdata });
-    }
+    const Ngases = parseddata ? parseddata.headings.length : 0;
+    setChecked(trues(Ngases));
+  }, [parseddata]);
+
+  useEffect(() => {
+    const newdata = filterdata(parseddata, checked);
+    setState({ data: newdata });
   }, [checked, parseddata]);
 
   return (
     parseddata && (
-      <Box my={2} borderBottom={1} borderColor="grey.500" width={500}>
+      <Box my={2} width={500} boxShadow={2}>
         <Typography variant="h6" align="left" component="span">
           <Box
             display="flex"
