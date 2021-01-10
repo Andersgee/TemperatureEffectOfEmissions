@@ -14,7 +14,7 @@ function xlimdata(data, min, max) {
 }
 
 function XlimInput(props) {
-  const { parseddata } = props.state;
+  const { parseddata, data } = props.state;
   const omin = first(parseddata.year);
   const omax = last(parseddata.year);
 
@@ -26,7 +26,7 @@ function XlimInput(props) {
     const newmax = Math.max(newmin + 1, max);
     setMin(newmin);
     setMax(newmax);
-    props.setState({ data: xlimdata(parseddata, newmin, newmax) });
+    props.setState({ data: xlimdata(data, newmin, newmax) });
   };
 
   const handleMax = (e) => {
@@ -34,7 +34,7 @@ function XlimInput(props) {
     const newmin = Math.min(min, newmax - 1);
     setMin(newmin);
     setMax(newmax);
-    props.setState({ data: xlimdata(parseddata, newmin, newmax) });
+    props.setState({ data: xlimdata(data, newmin, newmax) });
   };
 
   return (

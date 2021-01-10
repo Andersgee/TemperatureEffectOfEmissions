@@ -15,18 +15,18 @@ function anytrue(x) {
   return x.some((b) => b == true);
 }
 
-function filterdata(parseddata, checked) {
-  const data = {
+function filterdata(parseddata, data, checked) {
+  return {
     ...parseddata,
     gasnames: parseddata.gasnames.filter((d, i) => checked[i]),
     headings: parseddata.headings.filter((d, i) => checked[i]),
     rawdata: parseddata.rawdata.filter((d, i) => checked[i]),
+    xlim: data.xlim,
   };
-  return data;
 }
 
 function GasCheckboxes(props) {
-  const { parseddata } = props.state;
+  const { parseddata, data } = props.state;
   const { setState } = props;
 
   const Ngases = parseddata ? parseddata.headings.length : 0;
@@ -45,7 +45,7 @@ function GasCheckboxes(props) {
   }, [parseddata]);
 
   useEffect(() => {
-    const newdata = filterdata(parseddata, checked);
+    const newdata = filterdata(parseddata, data, checked);
     setState({ data: newdata });
   }, [checked, parseddata]);
 
