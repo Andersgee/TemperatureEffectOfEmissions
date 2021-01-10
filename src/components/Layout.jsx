@@ -10,6 +10,7 @@ import DownloadButton from "./DownloadButton";
 import ColorPaletteButton from "./ColorPaletteButton";
 import GasCheckboxes from "./GasCheckboxes";
 import Xlim from "./Xlim";
+import ScenarioSettings from "./ScenarioSettings";
 
 function Layout(props) {
   const { data, parseddata } = props.state;
@@ -36,7 +37,11 @@ function Layout(props) {
       <Box>
         <UploadButton />
         <Typography variant="body1" align="center">
-          {data ? `now viewing ${data.filename}` : "No plot data"}
+          {defaultdata.isLoading
+            ? "loading..."
+            : data
+            ? `now viewing ${data.filename}`
+            : "No plot data"}
         </Typography>
       </Box>
       {data && (
@@ -47,6 +52,9 @@ function Layout(props) {
             </Grid>
             <Grid item>
               <Xlim />
+            </Grid>
+            <Grid item>
+              <ScenarioSettings />
             </Grid>
           </Grid>
           <Box display="flex" justifyContent="space-between">

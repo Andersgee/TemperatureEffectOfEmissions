@@ -46,7 +46,7 @@ function vecadd(vs) {
 }
 
 const randomhex = () => `#${Math.floor(Math.random() * 16777215).toString(16)}`;
-const copy = (v) => v.slice(9);
+const copy = (v) => v.slice(0);
 
 function rangef(n, func) {
   const a = new Array(n);

@@ -18,6 +18,19 @@ function vecmul(v, k) {
   return res;
 }
 
+function vecadd(vs) {
+  //sum all vectors elementwise, return a single vector
+  let maxlen = Math.max(...vs.map((v) => v.length));
+  let res = new Array(maxlen).fill(0);
+  for (let n = 0; n < vs.length; n++) {
+    for (let i = 0; i < vs[n].length; i++) {
+      res[i] += vs[n][i];
+    }
+  }
+
+  return res;
+}
+
 export function rfe(gasname, tons) {
   if (!ghgs.hasOwnProperty(gasname)) {
     alert(`the gas ${gasname} is not supported`);
@@ -34,6 +47,14 @@ export function rfe(gasname, tons) {
 
 const randomhex = () => `#${Math.floor(Math.random() * 16777215).toString(16)}`;
 
+function rangef(n, func) {
+  const a = new Array(n);
+  for (let i = 0; i < n; i++) {
+    a[i] = func(i);
+  }
+  return a;
+}
+
 function dataslice(data, a, b) {
   return {
     ...data,
@@ -42,28 +63,67 @@ function dataslice(data, a, b) {
   };
 }
 
-export function makeplotdata(data, colors) {
-  //const data = dataslice(mdata, mdata.xlim[0], mdata.xlim[1]);
+function scenarioconstant(sumtemp, scenario) {
+  const { startindex, len } = scenario;
+  const N = sumtemp.length;
+  const firstvalue = sumtemp[startindex];
+  const firstdelta = sumtemp[startindex + 1] - sumtemp[startindex];
 
-  console.log("makeplotdata, data: ", data);
+  let konstantdelta = rangef(len, (i) => firstvalue + firstdelta * i);
+  konstantdelta = new Array(startindex).fill(null).concat(konstantdelta);
+  return konstantdelta;
+}
+
+export function makeplotdata(data, colors, scenario) {
   const datasets = [];
+
+  let temps = [];
+  for (let i = 0; i < data.headings.length; i++) {
+    temps.push(rfe(data.gasnames[i], data.rawdata[i]));
+  }
+  const sumtemp = vecadd(temps);
+  let stackedtemps = [temps[0]];
+  for (let i = 1; i < temps.length; i++) {
+    stackedtemps.push(vecadd([stackedtemps[i - 1], temps[i]]));
+  }
+
+  //Line ,konstantscenario
+  const konstantdelta = scenarioconstant(sumtemp, scenario);
+  datasets.push({
+    label: "scenario-konstant",
+    data: konstantdelta.slice(data.xlim[0], data.xlim[1]),
+    borderColor: "rgba(0,0,0,1.0)",
+    pointBackgroundColor: "rgba(255,255,255,0.0)",
+    pointHoverBackgroundColor: "rgba(0,0,0,1.0)",
+    pointBorderColor: "rgba(255,255,255,0.0)",
+    fill: false,
+  });
+
+  //Line, total
+  datasets.push({
+    label: "total",
+    data: sumtemp.slice(data.xlim[0], data.xlim[1]),
+    borderColor: "rgba(255,0,0,1.0)",
+    pointBackgroundColor: "rgba(255,255,255,0.0)",
+    pointHoverBackgroundColor: "rgba(0,0,0,1.0)",
+    pointBorderColor: "rgba(255,255,255,0.0)",
+    fill: false,
+  });
+
+  //Filled area stuff
   for (let i = 0; i < data.headings.length; i++) {
     let rh = randomhex();
     datasets.push({
       label: data.headings[i],
-      //data: rfe(data.gasnames[i], data.rawdata[i]),
-      data: rfe(data.gasnames[i], data.rawdata[i]).slice(
-        data.xlim[0],
-        data.xlim[1]
-      ),
+      data: stackedtemps[i].slice(data.xlim[0], data.xlim[1]),
       borderColor: colors[i] || rh,
       backgroundColor: colors[i] || rh,
       pointBackgroundColor: "rgba(0,0,0, 0.0)",
       pointBorderColor: "rgba(0,0,0, 0.0)",
-      fill: "-1",
+      fill: i === 0 ? "origin" : "-1", //fill "to x-axis line rather than "previous line" for first
+      //fill: false,
     });
   }
-  datasets[0].fill = "origin"; //special first
 
   const plotdata = {
     //headings: data.headings, //not needed for plot but maybe for convenience later

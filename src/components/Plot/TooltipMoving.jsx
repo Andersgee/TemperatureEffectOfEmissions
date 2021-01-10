@@ -11,13 +11,9 @@ const aspercent = (str, sum) =>
   Math.round((100 * parseFloat(str) * 10) / sum) / 10; //with one decimal
 
 export default function TooltipMoving(props) {
-  const show = props.show && props.datapoints && props.datapoints.length > 0;
-  const totaleffect = show
-    ? sum0(props.datapoints.map((dp) => parseFloat(dp.value)))
-    : 0;
-  return show ? (
+  return (
     <Box
-      width={350}
+      width={360}
       position="absolute"
       py={2}
       px={2}
@@ -29,28 +25,21 @@ export default function TooltipMoving(props) {
       bgcolor="#fff"
     >
       <Typography>{props.datapoints[0].xLabel}</Typography>
-      <Typography>Contribution to Global Temperature Change</Typography>
-      <Typography paragraph>
-        <b>Total: {round6(totaleffect)} °C</b>
-      </Typography>
 
       <Divider />
-      <Typography>From sources</Typography>
-      {props.datapoints
-        .map((dp, i) => (
-          <Box key={i} display="flex" justifyContent="space-between">
-            <Typography variant="body1">
-              <SvgSquare color={props.indexcolors[i]} />
-              {props.indexlabels[i]}:
-            </Typography>
+      <Typography>values</Typography>
+      {props.datapoints.map((dp, i) => (
+        <Box key={i} display="flex" justifyContent="space-between">
+          <Typography variant="body1">
+            {/*<SvgSquare color={props.indexcolors[i]} />*/}
+            {props.labels[dp.datasetIndex]}:
+          </Typography>
 
-            <Typography>{aspercent(dp.value, totaleffect)}%</Typography>
-            {/*<Typography>{round6(dp.value)} °C</Typography>*/}
-          </Box>
-        ))
-        .reverse()}
+          <Typography>{round6(dp.yLabel * 1000)} mC</Typography>
+        </Box>
+      ))}
     </Box>
-  ) : null;
+  );
 }
 
 //<Typography paragraph>Total effekt: {sum0(props.datapoints.map(dp=>parseFloat(dp.value)))}</Typography>

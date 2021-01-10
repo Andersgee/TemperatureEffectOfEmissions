@@ -16,7 +16,7 @@ function makeoptions(customtooltip) {
     scales: {
       yAxes: [
         {
-          stacked: true,
+          //stacked: true,
           position: "left",
           scaleLabel: {
             display: true,
@@ -63,23 +63,27 @@ function makeoptions(customtooltip) {
 }
 
 function LineChart(props) {
-  const { data, plotcolors } = props.state;
+  const { data, plotcolors, scenario } = props.state;
+
+  //const scenario = { startindex: 117, len: 15, p: 0 };
 
   const [plotdata, setPlotdata] = useState(null);
   useEffect(() => {
     if (data) {
-      setPlotdata(makeplotdata(data, plotcolors));
+      setPlotdata(makeplotdata(data, plotcolors, scenario));
     }
-  }, [data, plotcolors]);
+  }, [data, plotcolors, scenario]);
 
   const boxref = useRef();
   const [datapoints, setDatapoints] = useState(null);
   const [mousexy, setMousexy] = useState([0, 0]);
   const [show, setShow] = useState(false);
-  const indexlabels = plotdata ? plotdata.datasets.map((ds) => ds.label) : [];
+  const labels = plotdata ? plotdata.datasets.map((d, i) => d.label) : [];
+  //console.log("labels: ", labels);
 
   const customtooltip = (el) => {
-    //console.log(el); //tooltip element has quite a bit of stuff in it.
+    console.log("el: ", el);
+    //console.log("el.dataPoints: ", el.dataPoints); //tooltip element has quite a bit of stuff in it.
     setDatapoints(el.dataPoints);
   };
 
@@ -90,7 +94,7 @@ function LineChart(props) {
   const onMove = (e) => {
     let rect = e.currentTarget.getBoundingClientRect();
     //console.log(rect)
-    let x_max = window.innerWidth - rect.left - 350;
+    let x_max = window.innerWidth - rect.left - 360;
     let x = e.clientX - rect.left;
     let y = e.clientY - rect.top;
     x = Math.min(x_max, x);
@@ -106,13 +110,9 @@ function LineChart(props) {
         onMouseLeave={onLeave}
         onMouseMove={onMove}
       >
-        <TooltipMoving
-          show={show}
-          xy={mousexy}
-          datapoints={datapoints}
-          indexlabels={indexlabels}
-          indexcolors={plotcolors}
-        />
+        {show && datapoints && (
+          <TooltipMoving xy={mousexy} datapoints={datapoints} labels={labels} />
+        )}
         {plotdata && <Line data={plotdata} options={options} />}
       </Box>
     </Box>

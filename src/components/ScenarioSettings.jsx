@@ -3,17 +3,14 @@ import { withState } from "../state";
 import { Box, Input, Typography } from "@material-ui/core";
 import { clamp, first, last } from "../js/utils";
 
-function xlimdata(data, min, max) {
+function scenariodata(data, min, max) {
   const a = data.year.indexOf(min);
   const b = data.year.indexOf(max) + 1;
 
-  return {
-    ...data,
-    xlim: [a, b],
-  };
+  return { startindex: a, len: b - a, p: 0 };
 }
 
-function XlimInput(props) {
+function ScenarioSettings(props) {
   const { parseddata, data } = props.state;
   const omin = first(parseddata.year);
   const omax = last(parseddata.year);
@@ -26,7 +23,7 @@ function XlimInput(props) {
     const newmax = Math.max(newmin + 1, max);
     setMin(newmin);
     setMax(newmax);
-    props.setState({ data: xlimdata(data, newmin, newmax) });
+    props.setState({ scenario: scenariodata(data, newmin, newmax) });
   };
 
   const handleMax = (e) => {
@@ -34,16 +31,16 @@ function XlimInput(props) {
     const newmin = Math.min(min, newmax - 1);
     setMin(newmin);
     setMax(newmax);
-    props.setState({ data: xlimdata(data, newmin, newmax) });
+    props.setState({ scenario: scenariodata(data, newmin, newmax) });
   };
 
   return (
     <Box my={2} px={1} py={1} boxShadow={2} width={150}>
       <Box>
-        <Typography variant="body1">x-axis zoom</Typography>
+        <Typography variant="body1">scenario settings</Typography>
       </Box>
       <Box display="flex" justifyContent="space-between" alignContent="center">
-        <Typography variant="body2">min</Typography>
+        <Typography variant="body2">from</Typography>
         <Input
           style={{ width: 100 }}
           type="number"
@@ -55,7 +52,7 @@ function XlimInput(props) {
         />
       </Box>
       <Box display="flex" justifyContent="space-between" alignContent="center">
-        <Typography variant="body2">max</Typography>
+        <Typography variant="body2">to</Typography>
 
         <Input
           style={{ width: 100 }}
@@ -71,4 +68,4 @@ function XlimInput(props) {
   );
 }
 
-export default withState(XlimInput);
+export default withState(ScenarioSettings);
