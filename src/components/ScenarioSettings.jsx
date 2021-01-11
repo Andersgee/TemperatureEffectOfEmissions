@@ -16,11 +16,12 @@ function ScenarioSettings(props) {
   const omax = last(parseddata.year);
 
   const [min, setMin] = useState(omin);
-  const [max, setMax] = useState(omax);
+  const [len, setLen] = useState(5);
+  const [max, setMax] = useState(min + len);
 
   const handleMin = (e) => {
     const newmin = clamp(e.target.value, omin, omax - 1);
-    const newmax = Math.max(newmin + 1, max);
+    const newmax = clamp(newmin + len, omin + 1, omax);
     setMin(newmin);
     setMax(newmax);
     props.setState({ scenario: scenariodata(data, newmin, newmax) });
@@ -34,15 +35,22 @@ function ScenarioSettings(props) {
     props.setState({ scenario: scenariodata(data, newmin, newmax) });
   };
 
+  const handleLen = (e) => {
+    const newlen = Math.max(1, e.target.value);
+    setLen(newlen);
+    const newmax = clamp(min + newlen, omin + 1, omax);
+    props.setState({ scenario: scenariodata(data, min, newmax) });
+  };
+
   return (
     <Box my={2} px={1} py={1} boxShadow={2} width={150}>
       <Box>
         <Typography variant="body1">scenario settings</Typography>
       </Box>
-      <Box display="flex" justifyContent="space-between" alignContent="center">
-        <Typography variant="body2">from</Typography>
+      <Box display="flex" justifyContent="space-between" alignItems="center">
+        <Typography variant="body2">start</Typography>
         <Input
-          style={{ width: 100 }}
+          style={{ width: 80 }}
           type="number"
           value={min}
           onChange={handleMin}
@@ -51,16 +59,16 @@ function ScenarioSettings(props) {
           step={1}
         />
       </Box>
-      <Box display="flex" justifyContent="space-between" alignContent="center">
-        <Typography variant="body2">to</Typography>
+      <Box display="flex" justifyContent="space-between" alignItems="center">
+        <Typography variant="body2">length</Typography>
 
         <Input
-          style={{ width: 100 }}
+          style={{ width: 80 }}
           type="number"
-          value={max}
-          onChange={handleMax}
-          min={omin + 1}
-          max={omax}
+          value={len}
+          onChange={handleLen}
+          min={1}
+          //max={omax}
           step={1}
         />
       </Box>

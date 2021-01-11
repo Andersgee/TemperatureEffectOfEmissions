@@ -82,7 +82,7 @@ function LineChart(props) {
   //console.log("labels: ", labels);
 
   const customtooltip = (el) => {
-    console.log("el: ", el);
+    //console.log("el: ", el);
     //console.log("el.dataPoints: ", el.dataPoints); //tooltip element has quite a bit of stuff in it.
     setDatapoints(el.dataPoints);
   };

@@ -42,10 +42,10 @@ function XlimInput(props) {
       <Box>
         <Typography variant="body1">x-axis zoom</Typography>
       </Box>
-      <Box display="flex" justifyContent="space-between" alignContent="center">
+      <Box display="flex" justifyContent="space-between" alignItems="center">
         <Typography variant="body2">min</Typography>
         <Input
-          style={{ width: 100 }}
+          style={{ width: 80 }}
           type="number"
           value={min}
           onChange={handleMin}
@@ -54,11 +54,11 @@ function XlimInput(props) {
           step={1}
         />
       </Box>
-      <Box display="flex" justifyContent="space-between" alignContent="center">
+      <Box display="flex" justifyContent="space-between" alignItems="center">
         <Typography variant="body2">max</Typography>
 
         <Input
-          style={{ width: 100 }}
+          style={{ width: 80 }}
           type="number"
           value={max}
           onChange={handleMax}

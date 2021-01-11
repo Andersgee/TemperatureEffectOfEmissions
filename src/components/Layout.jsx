@@ -60,14 +60,20 @@ function Layout(props) {
                 <ScenarioSettings />
               </Grid>
             </Grid>
+
+            <Plot />
+            <Typography
+              variant="subtitle2"
+              color="textSecondary"
+              align="center"
+            >
+              Figure: description goes here
+            </Typography>
             <Box display="flex" justifyContent="space-between">
               <ColorPaletteButton onClick={togglepickers} />
               <DownloadButton />
             </Box>
-
-            <Plot />
             {showpickers && <Colorpickers headings={data.headings} />}
-            {/*<TemperaturePlot />*/}
           </Box>
         )}
       </Container>
