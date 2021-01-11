@@ -11,6 +11,7 @@ import ColorPaletteButton from "./ColorPaletteButton";
 import GasCheckboxes from "./GasCheckboxes";
 import Xlim from "./Xlim";
 import ScenarioSettings from "./ScenarioSettings";
+import Navbar from "./Navbar";
 
 function Layout(props) {
   const { data, parseddata } = props.state;
@@ -33,41 +34,44 @@ function Layout(props) {
   };
 
   return (
-    <Container>
-      <Box>
-        <UploadButton />
-        <Typography variant="body1" align="center">
-          {defaultdata.isLoading
-            ? "loading..."
-            : data
-            ? `now viewing ${data.filename}`
-            : "No plot data"}
-        </Typography>
-      </Box>
-      {data && (
-        <Box my={2}>
-          <Grid container spacing={4}>
-            <Grid item>
-              <GasCheckboxes />
-            </Grid>
-            <Grid item>
-              <Xlim />
-            </Grid>
-            <Grid item>
-              <ScenarioSettings />
-            </Grid>
-          </Grid>
-          <Box display="flex" justifyContent="space-between">
-            <ColorPaletteButton onClick={togglepickers} />
-            <DownloadButton />
-          </Box>
-
-          <Plot />
-          {showpickers && <Colorpickers headings={data.headings} />}
-          {/*<TemperaturePlot />*/}
+    <>
+      <Navbar />
+      <Container>
+        <Box>
+          <UploadButton />
+          <Typography variant="body1" align="center">
+            {defaultdata.isLoading
+              ? "loading..."
+              : data
+              ? `now viewing ${data.filename}`
+              : "No plot data"}
+          </Typography>
         </Box>
-      )}
-    </Container>
+        {data && (
+          <Box my={2}>
+            <Grid container spacing={4}>
+              <Grid item>
+                <GasCheckboxes />
+              </Grid>
+              <Grid item>
+                <Xlim />
+              </Grid>
+              <Grid item>
+                <ScenarioSettings />
+              </Grid>
+            </Grid>
+            <Box display="flex" justifyContent="space-between">
+              <ColorPaletteButton onClick={togglepickers} />
+              <DownloadButton />
+            </Box>
+
+            <Plot />
+            {showpickers && <Colorpickers headings={data.headings} />}
+            {/*<TemperaturePlot />*/}
+          </Box>
+        )}
+      </Container>
+    </>
   );
 }
 
