@@ -69,9 +69,32 @@ function scenarioconstant(sumtemp, scenario) {
   const firstvalue = sumtemp[startindex];
   const firstdelta = sumtemp[startindex + 1] - sumtemp[startindex];
 
-  let konstantdelta = rangef(len, (i) => firstvalue + firstdelta * i);
-  konstantdelta = new Array(startindex).fill(null).concat(konstantdelta);
-  return konstantdelta;
+  const before = new Array(startindex).fill(null);
+  const line = rangef(len, (i) => firstvalue + firstdelta * i);
+
+  let scenarioline = before.concat(line);
+  return scenarioline;
+}
+
+function scenarioexponential(sumtemp, scenario) {
+  const { startindex, len, p } = scenario;
+  const N = sumtemp.length;
+  const firstvalue = sumtemp[startindex];
+  const firstdelta = sumtemp[startindex + 1] - sumtemp[startindex];
+
+  const before = new Array(startindex).fill(null);
+  let line = new Array(len);
+  line[0] = firstvalue;
+  let r = 1 + p / 100;
+  for (let i = 1; i < len; i++) {
+    line[i] = line[i - 1] + firstdelta * Math.pow(r, i);
+  }
+
+  //const line = rangef(len, (i) => firstvalue + firstdelta * Math.pow(r, i));
+  console.log("line: ", line);
+
+  let scenarioline = before.concat(line);
+  return scenarioline;
 }
 
 export function makeplotdata(data, colors, scenario) {
@@ -87,12 +110,24 @@ export function makeplotdata(data, colors, scenario) {
     stackedtemps.push(vecadd([stackedtemps[i - 1], temps[i]]));
   }
 
-  //Line ,konstantscenario
+  //Line ,konstant
   const konstantdelta = scenarioconstant(sumtemp, scenario);
   datasets.push({
     label: "scenario-konstant",
     data: konstantdelta.slice(data.xlim[0], data.xlim[1]),
     borderColor: "rgba(0,0,0,1.0)",
+    pointBackgroundColor: "rgba(255,255,255,0.0)",
+    pointHoverBackgroundColor: "rgba(0,0,0,1.0)",
+    pointBorderColor: "rgba(255,255,255,0.0)",
+    fill: false,
+  });
+
+  //Line , exponential
+  const exponentialdelta = scenarioexponential(sumtemp, scenario);
+  datasets.push({
+    label: "scenario-exponential",
+    data: exponentialdelta.slice(data.xlim[0], data.xlim[1]),
+    borderColor: "rgba(0,255,0,1.0)",
     pointBackgroundColor: "rgba(255,255,255,0.0)",
     pointHoverBackgroundColor: "rgba(0,0,0,1.0)",
     pointBorderColor: "rgba(255,255,255,0.0)",

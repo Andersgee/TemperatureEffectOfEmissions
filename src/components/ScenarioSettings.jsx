@@ -3,20 +3,21 @@ import { withState } from "../state";
 import { Box, Input, Typography } from "@material-ui/core";
 import { clamp, first, last } from "../js/utils";
 
-function scenariodata(data, min, max) {
+function scenariodata(data, min, max, scenario) {
   const a = data.year.indexOf(min);
   const b = data.year.indexOf(max) + 1;
 
-  return { startindex: a, len: b - a, p: 0 };
+  return { ...scenario, startindex: a, len: b - a };
 }
 
 function ScenarioSettings(props) {
-  const { parseddata, data } = props.state;
+  const { parseddata, data, scenario } = props.state;
   const omin = first(parseddata.year);
   const omax = last(parseddata.year);
 
   const [min, setMin] = useState(omin);
-  const [len, setLen] = useState(5);
+  const [len, setLen] = useState(scenario.len);
+  const [percent, setPercent] = useState(scenario.p);
   const [max, setMax] = useState(min + len);
 
   const handleMin = (e) => {
@@ -24,7 +25,7 @@ function ScenarioSettings(props) {
     const newmax = clamp(newmin + len, omin + 1, omax);
     setMin(newmin);
     setMax(newmax);
-    props.setState({ scenario: scenariodata(data, newmin, newmax) });
+    props.setState({ scenario: scenariodata(data, newmin, newmax, scenario) });
   };
 
   const handleMax = (e) => {
@@ -32,14 +33,20 @@ function ScenarioSettings(props) {
     const newmin = Math.min(min, newmax - 1);
     setMin(newmin);
     setMax(newmax);
-    props.setState({ scenario: scenariodata(data, newmin, newmax) });
+    props.setState({ scenario: scenariodata(data, newmin, newmax, scenario) });
   };
 
   const handleLen = (e) => {
     const newlen = Math.max(1, e.target.value);
     setLen(newlen);
     const newmax = clamp(min + newlen, omin + 1, omax);
-    props.setState({ scenario: scenariodata(data, min, newmax) });
+    props.setState({ scenario: scenariodata(data, min, newmax, scenario) });
+  };
+
+  const handlePercent = (e) => {
+    const newpercent = clamp(e.target.value, -20, 20);
+    setPercent(newpercent);
+    props.setState({ scenario: { ...scenario, p: newpercent } });
   };
 
   return (
@@ -69,6 +76,19 @@ function ScenarioSettings(props) {
           onChange={handleLen}
           min={1}
           //max={omax}
+          step={1}
+        />
+      </Box>
+      <Box display="flex" justifyContent="space-between" alignItems="center">
+        <Typography variant="body2">percent</Typography>
+
+        <Input
+          style={{ width: 80 }}
+          type="number"
+          value={percent}
+          onChange={handlePercent}
+          min={-20}
+          max={20}
           step={1}
         />
       </Box>
