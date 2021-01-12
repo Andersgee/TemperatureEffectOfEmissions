@@ -1,5 +1,9 @@
 import XLSX from "xlsx";
 
+function trues(N) {
+  return new Array(N).fill(true);
+}
+
 function columndata(parsed) {
   const headings = parsed.headings;
   const gasnames = parsed.gasnames;
@@ -21,7 +25,8 @@ function columndata(parsed) {
   }
 
   const xlim = [0, year.length];
-  const cdata = { headings, gasnames, year, rawdata, xlim };
+  const checked = trues(Ngases);
+  const cdata = { headings, gasnames, year, rawdata, xlim, checked };
   return cdata;
 }
 

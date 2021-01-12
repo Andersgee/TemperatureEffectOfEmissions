@@ -97,6 +97,11 @@ function scenarioexponential(sumtemp, scenario) {
   return scenarioline;
 }
 
+function checkedcolor(plotcolors, checked, i) {
+  let activecolors = plotcolors.filter((c, i) => checked[i]);
+  return activecolors[i];
+}
+
 export function makeplotdata(data, colors, scenario) {
   const datasets = [];
 
@@ -151,8 +156,8 @@ export function makeplotdata(data, colors, scenario) {
     datasets.push({
       label: data.headings[i],
       data: stackedtemps[i].slice(data.xlim[0], data.xlim[1]),
-      borderColor: colors[i] || rh,
-      backgroundColor: colors[i] || rh,
+      borderColor: checkedcolor(colors, data.checked, i) || rh,
+      backgroundColor: checkedcolor(colors, data.checked, i) || rh,
       pointBackgroundColor: "rgba(0,0,0, 0.0)",
       pointBorderColor: "rgba(0,0,0, 0.0)",
       fill: i === 0 ? "origin" : "-1", //fill "to x-axis line rather than "previous line" for first

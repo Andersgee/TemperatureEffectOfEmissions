@@ -73,7 +73,7 @@ function Layout(props) {
               <ColorPaletteButton onClick={togglepickers} />
               <DownloadButton />
             </Box>
-            {showpickers && <Colorpickers headings={data.headings} />}
+            {showpickers && <Colorpickers headings={parseddata.headings} />}
           </Box>
         )}
       </Container>

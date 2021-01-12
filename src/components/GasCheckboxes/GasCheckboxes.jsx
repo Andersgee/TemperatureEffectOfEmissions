@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Box, Typography } from "@material-ui/core";
 import { withState } from "../../state";
 import Checkbox from "@material-ui/core/Checkbox";
-
+import SvgSquare from "../SvgSquare";
 function trues(N) {
   return new Array(N).fill(true);
 }
@@ -21,12 +21,13 @@ function filterdata(parseddata, data, checked) {
     gasnames: parseddata.gasnames.filter((d, i) => checked[i]),
     headings: parseddata.headings.filter((d, i) => checked[i]),
     rawdata: parseddata.rawdata.filter((d, i) => checked[i]),
+    checked: checked,
     xlim: data.xlim,
   };
 }
 
 function GasCheckboxes(props) {
-  const { parseddata, data } = props.state;
+  const { parseddata, data, plotcolors } = props.state;
   const { setState } = props;
 
   const Ngases = parseddata ? parseddata.headings.length : 0;
@@ -81,6 +82,7 @@ function GasCheckboxes(props) {
                   color="primary"
                 />
               </Box>
+              <SvgSquare color={plotcolors[i]} />
               <Box width={100}>{parseddata.gasnames[i]}</Box>
               <Box width={350}>{parseddata.headings[i]}</Box>
             </Box>
