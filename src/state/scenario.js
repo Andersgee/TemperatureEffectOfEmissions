@@ -1,6 +1,6 @@
 import { connect } from "react-redux";
 
-const initState = { startindex: 0, len: 5, p: 5, deltaT: 0.000001 };
+const initState = { startindex: 0, len: 5, p: 5, deltaT: 0 };
 
 export default function scenario(state = initState, action) {
   return action.type === "scenario" ? action.payload : state;

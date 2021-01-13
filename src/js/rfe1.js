@@ -97,6 +97,19 @@ function scenarioexponential(sumtemp, scenario) {
   return scenarioline;
 }
 
+function scenariocustomdelta(sumtemp, scenario) {
+  const { startindex, len, deltaT } = scenario;
+  const N = sumtemp.length;
+  const firstvalue = sumtemp[startindex];
+  //const firstdelta = sumtemp[startindex + 1] - sumtemp[startindex];
+
+  const before = new Array(startindex).fill(null);
+  const line = rangef(len, (i) => firstvalue + deltaT * i);
+
+  let scenarioline = before.concat(line);
+  return scenarioline;
+}
+
 function checkedcolor(plotcolors, checked, i) {
   let activecolors = plotcolors.filter((c, i) => checked[i]);
   return activecolors[i];
@@ -133,6 +146,18 @@ export function makeplotdata(data, colors, scenario) {
     label: "scenario-exponential",
     data: exponentialdelta.slice(data.xlim[0], data.xlim[1]),
     borderColor: "rgba(0,255,0,1.0)",
+    pointBackgroundColor: "rgba(255,255,255,0.0)",
+    pointHoverBackgroundColor: "rgba(0,0,0,1.0)",
+    pointBorderColor: "rgba(255,255,255,0.0)",
+    fill: false,
+  });
+
+  //Line , scenariocustomdelta
+  const customdelta = scenariocustomdelta(sumtemp, scenario);
+  datasets.push({
+    label: "scenario-customdelta",
+    data: customdelta.slice(data.xlim[0], data.xlim[1]),
+    borderColor: "rgba(255,255,0,1.0)",
     pointBackgroundColor: "rgba(255,255,255,0.0)",
     pointHoverBackgroundColor: "rgba(0,0,0,1.0)",
     pointBorderColor: "rgba(255,255,255,0.0)",

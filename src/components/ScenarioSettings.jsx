@@ -18,6 +18,7 @@ function ScenarioSettings(props) {
   const [min, setMin] = useState(omin);
   const [len, setLen] = useState(scenario.len);
   const [percent, setPercent] = useState(scenario.p);
+  const [deltaT, setDeltaT] = useState(scenario.deltaT);
   const [max, setMax] = useState(min + len);
 
   const handleMin = (e) => {
@@ -47,6 +48,14 @@ function ScenarioSettings(props) {
     const newpercent = clamp(e.target.value, -20, 20);
     setPercent(newpercent);
     props.setState({ scenario: { ...scenario, p: newpercent } });
+  };
+
+  const handleDeltaT = (e) => {
+    const E = Math.pow(10, -9);
+    const newdeltaT = clamp(e.target.value, -200, 200);
+    console.log("handleDeltaT: ", newdeltaT);
+    setDeltaT(newdeltaT);
+    props.setState({ scenario: { ...scenario, deltaT: newdeltaT * E } });
   };
 
   return (
@@ -89,6 +98,19 @@ function ScenarioSettings(props) {
           onChange={handlePercent}
           min={-20}
           max={20}
+          step={1}
+        />
+      </Box>
+      <Box display="flex" justifyContent="space-between" alignItems="center">
+        <Typography variant="body2">deltaT (10^-9)</Typography>
+
+        <Input
+          style={{ width: 80 }}
+          type="number"
+          value={deltaT}
+          onChange={handleDeltaT}
+          min={-200}
+          max={200}
           step={1}
         />
       </Box>
