@@ -6,6 +6,7 @@ import useDefaultData from "../hooks/useData";
 import { withState } from "../state";
 import Colorpickers from "./Colorpickers";
 import UploadButton from "./UploadButton";
+import UploadButtonHelp from "./UploadButtonHelp";
 import DownloadButton from "./DownloadButton";
 import ColorPaletteButton from "./ColorPaletteButton";
 import GasCheckboxes from "./GasCheckboxes";
@@ -38,7 +39,10 @@ function Layout(props) {
       <Navbar />
       <Container>
         <Box>
-          <UploadButton />
+          <Box display="flex" justifyContent="center">
+            <UploadButton />
+            <UploadButtonHelp />
+          </Box>
           <Typography variant="body1" align="center">
             {defaultdata.isLoading
               ? "loading..."
