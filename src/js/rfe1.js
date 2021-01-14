@@ -116,6 +116,7 @@ function checkedcolor(plotcolors, checked, i) {
 }
 
 export function makeplotdata(data, colors, scenario) {
+  console.log("makeplotdata, scenario: ", scenario);
   const datasets = [];
 
   let temps = [];

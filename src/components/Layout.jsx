@@ -53,7 +53,7 @@ function Layout(props) {
         </Box>
         {data && (
           <Box my={2}>
-            <Grid container spacing={4}>
+            <Grid container spacing={4} justify="center">
               <Grid item>
                 <GasCheckboxes />
               </Grid>
