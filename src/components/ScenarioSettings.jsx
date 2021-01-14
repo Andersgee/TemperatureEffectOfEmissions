@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { withState } from "../state";
 import { Box, Input, Typography } from "@material-ui/core";
-import { clamp, first, last } from "../js/utils";
+import { mix, clamp, first, last } from "../js/utils";
 
 function scenariodata(data, min, max, scenario) {
   const a = data.year.indexOf(min);
@@ -12,6 +12,7 @@ function scenariodata(data, min, max, scenario) {
 
 function ScenarioSettings(props) {
   const { parseddata, data, scenario } = props.state;
+  const { setState } = props;
   const omin = first(parseddata.year);
   const omax = last(parseddata.year);
 
@@ -20,30 +21,38 @@ function ScenarioSettings(props) {
   const [percent, setPercent] = useState(scenario.p);
   const [timetozero, setTimetozero] = useState(scenario.timetozero);
 
+  useEffect(() => {
+    //const startyear = Math.round((omin + omax) / 2);
+    const startyear = Math.round(mix(omin, omax, 2 / 3));
+    const newmax = startyear + len;
+    setMin(startyear);
+    setState({ scenario: scenariodata(data, startyear, newmax, scenario) });
+  }, [parseddata, omin, omax]);
+
   const handleMin = (e) => {
     const newmin = parseInt(e.target.value);
     const newmax = newmin + len;
     setMin(newmin);
-    props.setState({ scenario: scenariodata(data, newmin, newmax, scenario) });
+    setState({ scenario: scenariodata(data, newmin, newmax, scenario) });
   };
 
   const handleLen = (e) => {
     const newlen = parseInt(e.target.value);
     const newmax = min + newlen;
     setLen(newlen);
-    props.setState({ scenario: scenariodata(data, min, newmax, scenario) });
+    setState({ scenario: scenariodata(data, min, newmax, scenario) });
   };
 
   const handlePercent = (e) => {
     const newpercent = parseInt(e.target.value);
     setPercent(newpercent);
-    props.setState({ scenario: { ...scenario, p: newpercent } });
+    setState({ scenario: { ...scenario, p: newpercent } });
   };
 
   const handleTimetozero = (e) => {
     const newtimetozero = parseInt(e.target.value);
     setTimetozero(newtimetozero);
-    props.setState({ scenario: { ...scenario, timetozero: newtimetozero } });
+    setState({ scenario: { ...scenario, timetozero: newtimetozero } });
   };
 
   return (
