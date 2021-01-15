@@ -55,19 +55,11 @@ function rangef(n, func) {
   return a;
 }
 
-function dataslice(data, a, b) {
-  return {
-    ...data,
-    year: data.year.slice(a, b),
-    rawdata: data.rawdata.map((r) => r.slice(a, b)),
-  };
-}
-
 function scenarioconstant(sumtemp, scenario) {
   const { startindex, len } = scenario;
   const N = sumtemp.length;
   const firstvalue = sumtemp[startindex];
-  const firstdelta = sumtemp[startindex + 1] - sumtemp[startindex];
+  const firstdelta = sumtemp[startindex] - sumtemp[startindex - 1];
 
   const before = new Array(startindex).fill(null);
   const line = rangef(len, (i) => firstvalue + firstdelta * i);
@@ -80,7 +72,7 @@ function scenarioexponential(sumtemp, scenario) {
   const { startindex, len, p } = scenario;
   const N = sumtemp.length;
   const firstvalue = sumtemp[startindex];
-  const firstdelta = sumtemp[startindex + 1] - sumtemp[startindex];
+  const firstdelta = sumtemp[startindex] - sumtemp[startindex - 1];
 
   const before = new Array(startindex).fill(null);
   let line = new Array(len);
@@ -90,21 +82,33 @@ function scenarioexponential(sumtemp, scenario) {
     line[i] = line[i - 1] + firstdelta * Math.pow(r, i);
   }
 
-  //const line = rangef(len, (i) => firstvalue + firstdelta * Math.pow(r, i));
-  console.log("line: ", line);
-
   let scenarioline = before.concat(line);
   return scenarioline;
 }
 
-function scenariocustomdelta(sumtemp, scenario) {
-  const { startindex, len, deltaT } = scenario;
+function autodeltaT(firstdelta, timetozero) {
+  return firstdelta / timetozero;
+}
+
+function scenariotimetozero(sumtemp, scenario) {
+  const { startindex, len, timetozero } = scenario;
   const N = sumtemp.length;
   const firstvalue = sumtemp[startindex];
-  //const firstdelta = sumtemp[startindex + 1] - sumtemp[startindex];
+  const firstdelta = sumtemp[startindex] - sumtemp[startindex - 1];
 
   const before = new Array(startindex).fill(null);
-  const line = rangef(len, (i) => firstvalue + deltaT * i);
+  const deltaT = autodeltaT(firstdelta, timetozero);
+  let line = new Array(len);
+  line[0] = firstvalue;
+  if (deltaT > 0) {
+    for (let i = 1; i < len; i++) {
+      line[i] = line[i - 1] + Math.max(0, firstdelta - deltaT * (i - 1));
+    }
+  } else {
+    for (let i = 1; i < len; i++) {
+      line[i] = line[i - 1] + Math.min(0, firstdelta - deltaT * (i - 1));
+    }
+  }
 
   let scenarioline = before.concat(line);
   return scenarioline;
@@ -116,14 +120,17 @@ function checkedcolor(plotcolors, checked, i) {
 }
 
 export function makeplotdata(data, colors, scenario) {
-  console.log("makeplotdata, scenario: ", scenario);
+  const maxX = Math.max(data.xlim[1], scenario.startindex + scenario.len);
   const datasets = [];
 
   let temps = [];
   for (let i = 0; i < data.headings.length; i++) {
     temps.push(rfe(data.gasnames[i], data.rawdata[i]));
   }
-  const sumtemp = vecadd(temps);
+
+  let sumtemp = vecadd(temps);
+  console.log("sumtemp.length: ", sumtemp.length);
+
   let stackedtemps = [temps[0]];
   for (let i = 1; i < temps.length; i++) {
     stackedtemps.push(vecadd([stackedtemps[i - 1], temps[i]]));
@@ -133,7 +140,7 @@ export function makeplotdata(data, colors, scenario) {
   const konstantdelta = scenarioconstant(sumtemp, scenario);
   datasets.push({
     label: "scenario-konstant",
-    data: konstantdelta.slice(data.xlim[0], data.xlim[1]),
+    data: konstantdelta.slice(data.xlim[0]),
     borderColor: "rgba(0,0,0,1.0)",
     pointBackgroundColor: "rgba(255,255,255,0.0)",
     pointHoverBackgroundColor: "rgba(0,0,0,1.0)",
@@ -145,7 +152,7 @@ export function makeplotdata(data, colors, scenario) {
   const exponentialdelta = scenarioexponential(sumtemp, scenario);
   datasets.push({
     label: "scenario-exponential",
-    data: exponentialdelta.slice(data.xlim[0], data.xlim[1]),
+    data: exponentialdelta.slice(data.xlim[0]),
     borderColor: "rgba(0,255,0,1.0)",
     pointBackgroundColor: "rgba(255,255,255,0.0)",
     pointHoverBackgroundColor: "rgba(0,0,0,1.0)",
@@ -153,11 +160,11 @@ export function makeplotdata(data, colors, scenario) {
     fill: false,
   });
 
-  //Line , scenariocustomdelta
-  const customdelta = scenariocustomdelta(sumtemp, scenario);
+  //Line , scenario timetozero
+  const timetozero = scenariotimetozero(sumtemp, scenario);
   datasets.push({
-    label: "scenario-customdelta",
-    data: customdelta.slice(data.xlim[0], data.xlim[1]),
+    label: "scenario-timetozero",
+    data: timetozero.slice(data.xlim[0]),
     borderColor: "rgba(255,255,0,1.0)",
     pointBackgroundColor: "rgba(255,255,255,0.0)",
     pointHoverBackgroundColor: "rgba(0,0,0,1.0)",
@@ -168,7 +175,7 @@ export function makeplotdata(data, colors, scenario) {
   //Line, total
   datasets.push({
     label: "total",
-    data: sumtemp.slice(data.xlim[0], data.xlim[1]),
+    data: sumtemp.slice(data.xlim[0], maxX),
     borderColor: "rgba(255,0,0,1.0)",
     pointBackgroundColor: "rgba(255,255,255,0.0)",
     pointHoverBackgroundColor: "rgba(0,0,0,1.0)",
@@ -181,7 +188,7 @@ export function makeplotdata(data, colors, scenario) {
     let rh = randomhex();
     datasets.push({
       label: data.headings[i],
-      data: stackedtemps[i].slice(data.xlim[0], data.xlim[1]),
+      data: stackedtemps[i].slice(data.xlim[0], maxX),
       borderColor: checkedcolor(colors, data.checked, i) || rh,
       backgroundColor: checkedcolor(colors, data.checked, i) || rh,
       pointBackgroundColor: "rgba(0,0,0, 0.0)",
@@ -191,13 +198,23 @@ export function makeplotdata(data, colors, scenario) {
     });
   }
 
+  console.log("data.year: ", data.year);
   const plotdata = {
-    //headings: data.headings, //not needed for plot but maybe for convenience later
-    labels: data.year.slice(data.xlim[0], data.xlim[1]),
+    labels: maybeexpandedyears(data, maxX),
     datasets: datasets,
   };
 
-  console.log("makeplotdata, plotdata: ", plotdata);
-
   return plotdata;
+}
+
+function maybeexpandedyears(data, maxX) {
+  let years = Array.from(data.year); //typed arrays dont have push etc..
+  let lastdatayear = data.year[data.year.length - 1];
+  let Nextra = maxX - years.length;
+  if (Nextra > 0) {
+    for (let i = 1; i <= Nextra; i++) {
+      years.push(lastdatayear + i);
+    }
+  }
+  return years;
 }

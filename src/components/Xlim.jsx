@@ -22,7 +22,7 @@ function XlimInput(props) {
   const [max, setMax] = useState(omax);
 
   const handleMin = (e) => {
-    const newmin = clamp(e.target.value, omin, omax - 1);
+    const newmin = parseInt(e.target.value);
     const newmax = Math.max(newmin + 1, max);
     setMin(newmin);
     setMax(newmax);
@@ -30,7 +30,7 @@ function XlimInput(props) {
   };
 
   const handleMax = (e) => {
-    const newmax = clamp(e.target.value, omin + 1, omax);
+    const newmax = parseInt(e.target.value);
     const newmin = Math.min(min, newmax - 1);
     setMin(newmin);
     setMax(newmax);
@@ -49,9 +49,7 @@ function XlimInput(props) {
           type="number"
           value={min}
           onChange={handleMin}
-          min={omin}
-          max={omax - 1}
-          step={1}
+          inputProps={{ min: omin, max: omax - 1, step: 1 }}
         />
       </Box>
       <Box display="flex" justifyContent="space-between" alignItems="center">
@@ -62,9 +60,7 @@ function XlimInput(props) {
           type="number"
           value={max}
           onChange={handleMax}
-          min={omin + 1}
-          max={omax}
-          step={1}
+          inputProps={{ min: omin + 1, max: omax, step: 1 }}
         />
       </Box>
     </Box>

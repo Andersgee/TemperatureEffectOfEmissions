@@ -3,11 +3,18 @@ import { withState } from "../state";
 import { Box, Input, Typography } from "@material-ui/core";
 import { mix, clamp, first, last } from "../js/utils";
 
+/*
 function scenariodata(data, min, max, scenario) {
   const a = data.year.indexOf(min);
   const b = data.year.indexOf(max) + 1;
 
   return { ...scenario, startindex: a, len: b - a };
+}
+*/
+function scenariodata(data, min, max, scenario) {
+  const a = data.year.indexOf(min);
+  const len = max - min + 1;
+  return { ...scenario, startindex: a, len: len };
 }
 
 function ScenarioSettings(props) {
@@ -23,11 +30,13 @@ function ScenarioSettings(props) {
 
   useEffect(() => {
     //const startyear = Math.round((omin + omax) / 2);
+    const omin = first(parseddata.year);
+    const omax = last(parseddata.year);
     const startyear = Math.round(mix(omin, omax, 2 / 3));
     const newmax = startyear + len;
     setMin(startyear);
     setState({ scenario: scenariodata(data, startyear, newmax, scenario) });
-  }, [parseddata, omin, omax]);
+  }, [parseddata]);
 
   const handleMin = (e) => {
     const newmin = parseInt(e.target.value);
@@ -67,7 +76,7 @@ function ScenarioSettings(props) {
           type="number"
           value={min}
           onChange={handleMin}
-          inputProps={{ min: omin, max: omax - 1, step: 1 }}
+          inputProps={{ min: omin + 1, max: omax - 1, step: 1 }}
         />
       </Box>
       <Box display="flex" justifyContent="space-between" alignItems="center">
