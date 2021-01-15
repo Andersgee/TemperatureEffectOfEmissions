@@ -76,7 +76,7 @@ function ScenarioSettings(props) {
           type="number"
           value={min}
           onChange={handleMin}
-          inputProps={{ min: omin + 1, max: omax - 1, step: 1 }}
+          inputProps={{ min: omin + 1, max: omax, step: 1 }}
         />
       </Box>
       <Box display="flex" justifyContent="space-between" alignItems="center">
