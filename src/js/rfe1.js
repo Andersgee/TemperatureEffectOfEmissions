@@ -208,7 +208,7 @@ export function makeplotdata(data, colors, scenario) {
 }
 
 function maybeexpandedyears(data, maxX) {
-  let years = Array.from(data.year); //typed arrays dont have push etc..
+  let years = Array.from(data.year); //typed arrays dont have push so create a js array
   let lastdatayear = data.year[data.year.length - 1];
   let Nextra = maxX - years.length;
   if (Nextra > 0) {
@@ -216,5 +216,5 @@ function maybeexpandedyears(data, maxX) {
       years.push(lastdatayear + i);
     }
   }
-  return years;
+  return (years = years.slice(data.xlim[0]));
 }
