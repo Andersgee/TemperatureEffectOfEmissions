@@ -120,7 +120,9 @@ function checkedcolor(plotcolors, checked, i) {
 }
 
 export function makeplotdata(data, colors, scenario) {
-  const maxX = Math.max(data.xlim[1], scenario.startindex + scenario.len);
+  const maxX = scenario.show
+    ? Math.max(data.xlim[1], scenario.startindex + scenario.len)
+    : data.xlim[1];
   const datasets = [];
 
   let temps = [];
@@ -136,41 +138,43 @@ export function makeplotdata(data, colors, scenario) {
     stackedtemps.push(vecadd([stackedtemps[i - 1], temps[i]]));
   }
 
-  //Line ,konstant
-  const konstantdelta = scenarioconstant(sumtemp, scenario);
-  datasets.push({
-    label: "scenario-konstant",
-    data: konstantdelta.slice(data.xlim[0]),
-    borderColor: "rgba(0,0,0,1.0)",
-    pointBackgroundColor: "rgba(255,255,255,0.0)",
-    pointHoverBackgroundColor: "rgba(0,0,0,1.0)",
-    pointBorderColor: "rgba(255,255,255,0.0)",
-    fill: false,
-  });
+  if (scenario.show) {
+    //Line ,konstant
+    const konstantdelta = scenarioconstant(sumtemp, scenario);
+    datasets.push({
+      label: "scenario-konstant",
+      data: konstantdelta.slice(data.xlim[0]),
+      borderColor: "rgba(0,0,0,1.0)",
+      pointBackgroundColor: "rgba(255,255,255,0.0)",
+      pointHoverBackgroundColor: "rgba(0,0,0,1.0)",
+      pointBorderColor: "rgba(255,255,255,0.0)",
+      fill: false,
+    });
 
-  //Line , exponential
-  const exponentialdelta = scenarioexponential(sumtemp, scenario);
-  datasets.push({
-    label: "scenario-exponential",
-    data: exponentialdelta.slice(data.xlim[0]),
-    borderColor: "rgba(0,255,0,1.0)",
-    pointBackgroundColor: "rgba(255,255,255,0.0)",
-    pointHoverBackgroundColor: "rgba(0,0,0,1.0)",
-    pointBorderColor: "rgba(255,255,255,0.0)",
-    fill: false,
-  });
+    //Line , exponential
+    const exponentialdelta = scenarioexponential(sumtemp, scenario);
+    datasets.push({
+      label: "scenario-exponential",
+      data: exponentialdelta.slice(data.xlim[0]),
+      borderColor: "rgba(0,255,0,1.0)",
+      pointBackgroundColor: "rgba(255,255,255,0.0)",
+      pointHoverBackgroundColor: "rgba(0,0,0,1.0)",
+      pointBorderColor: "rgba(255,255,255,0.0)",
+      fill: false,
+    });
 
-  //Line , scenario timetozero
-  const timetozero = scenariotimetozero(sumtemp, scenario);
-  datasets.push({
-    label: "scenario-timetozero",
-    data: timetozero.slice(data.xlim[0]),
-    borderColor: "rgba(255,255,0,1.0)",
-    pointBackgroundColor: "rgba(255,255,255,0.0)",
-    pointHoverBackgroundColor: "rgba(0,0,0,1.0)",
-    pointBorderColor: "rgba(255,255,255,0.0)",
-    fill: false,
-  });
+    //Line , scenario timetozero
+    const timetozero = scenariotimetozero(sumtemp, scenario);
+    datasets.push({
+      label: "scenario-timetozero",
+      data: timetozero.slice(data.xlim[0]),
+      borderColor: "rgba(255,255,0,1.0)",
+      pointBackgroundColor: "rgba(255,255,255,0.0)",
+      pointHoverBackgroundColor: "rgba(0,0,0,1.0)",
+      pointBorderColor: "rgba(255,255,255,0.0)",
+      fill: false,
+    });
+  }
 
   //Line, total
   datasets.push({
@@ -216,5 +220,5 @@ function maybeexpandedyears(data, maxX) {
       years.push(lastdatayear + i);
     }
   }
-  return (years = years.slice(data.xlim[0]));
+  return years.slice(data.xlim[0], maxX);
 }

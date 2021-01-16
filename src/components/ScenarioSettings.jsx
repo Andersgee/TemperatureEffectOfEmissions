@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { withState } from "../state";
 import { Box, Input, Typography } from "@material-ui/core";
 import { mix, clamp, first, last } from "../js/utils";
+import Checkbox from "@material-ui/core/Checkbox";
 
 /*
 function scenariodata(data, min, max, scenario) {
@@ -27,6 +28,14 @@ function ScenarioSettings(props) {
   const [len, setLen] = useState(scenario.len);
   const [percent, setPercent] = useState(scenario.p);
   const [timetozero, setTimetozero] = useState(scenario.timetozero);
+
+  const [checked, setChecked] = useState(true);
+
+  const handleChecked = (e) => {
+    console.log("checked: ", e.target.checked);
+    setChecked(e.target.checked);
+    setState({ scenario: { ...scenario, show: e.target.checked } });
+  };
 
   useEffect(() => {
     //const startyear = Math.round((omin + omax) / 2);
@@ -67,7 +76,17 @@ function ScenarioSettings(props) {
   return (
     <Box my={2} px={1} py={1} boxShadow={2} width={200}>
       <Box>
-        <Typography variant="body1">scenario settings</Typography>
+        <Typography variant="body1">Scenario Settings</Typography>
+      </Box>
+      <Box display="flex" justifyContent="space-between" alignItems="center">
+        <Typography variant="body2">Show Lines</Typography>
+        <Box width={90}>
+          <Checkbox
+            checked={checked}
+            onChange={handleChecked}
+            color="primary"
+          />
+        </Box>
       </Box>
       <Box display="flex" justifyContent="space-between" alignItems="center">
         <Typography variant="body2">start</Typography>
