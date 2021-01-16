@@ -138,11 +138,12 @@ export function makeplotdata(data, colors, scenario) {
     datasets.push({
       label: "scenario-konstant",
       data: konstantdelta.slice(data.xlim[0]),
-      borderColor: "rgba(0,0,0,1.0)",
+      borderColor: "#000000",
       pointBackgroundColor: "rgba(255,255,255,0.0)",
       pointHoverBackgroundColor: "rgba(0,0,0,1.0)",
       pointBorderColor: "rgba(255,255,255,0.0)",
       fill: false,
+      borderWidth: 5,
     });
 
     //Line , exponential
@@ -150,11 +151,12 @@ export function makeplotdata(data, colors, scenario) {
     datasets.push({
       label: "scenario-exponential",
       data: exponentialdelta.slice(data.xlim[0]),
-      borderColor: "rgba(0,255,0,1.0)",
+      borderColor: "#6741d9",
       pointBackgroundColor: "rgba(255,255,255,0.0)",
       pointHoverBackgroundColor: "rgba(0,0,0,1.0)",
       pointBorderColor: "rgba(255,255,255,0.0)",
       fill: false,
+      borderWidth: 5,
     });
 
     //Line , scenario timetozero
@@ -162,11 +164,12 @@ export function makeplotdata(data, colors, scenario) {
     datasets.push({
       label: "scenario-timetozero",
       data: timetozero.slice(data.xlim[0]),
-      borderColor: "rgba(255,255,0,1.0)",
+      borderColor: "#099268",
       pointBackgroundColor: "rgba(255,255,255,0.0)",
       pointHoverBackgroundColor: "rgba(0,0,0,1.0)",
       pointBorderColor: "rgba(255,255,255,0.0)",
       fill: false,
+      borderWidth: 5,
     });
   }
 
