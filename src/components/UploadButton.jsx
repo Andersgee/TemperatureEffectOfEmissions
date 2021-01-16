@@ -9,7 +9,6 @@ function UploadButton(props) {
     parseExcelFile(file).then((data) => {
       data.filename = file.name;
       props.setParseddata(data);
-      console.log("now setting parseddata, data: ", data);
     });
   };
 

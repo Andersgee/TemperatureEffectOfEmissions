@@ -117,7 +117,5 @@ export function makeplotdata(data, colors, startyear, percentage) {
     datasets: datasets,
   };
 
-  console.log("makeplotdata, deltatemp, alldata: ", alldata);
-
   return alldata;
 }

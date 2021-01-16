@@ -46,7 +46,6 @@ function columndata(parsed) {
     year,
     xlim,
   };
-  console.log("cdata: ", cdata);
   return cdata;
 }
 

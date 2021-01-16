@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 //import { defaults, Line } from "react-chartjs-2";
 import { Line } from "react-chartjs-2";
 import { Typography, Box } from "@material-ui/core";
-import TooltipMoving from "./TooltipMoving";
+import TooltipMoving from "./TooltipMoving2";
 import { withState } from "../../state";
 import { makeplotdata } from "../../js/rfe1";
 
@@ -70,7 +70,8 @@ function LineChart(props) {
   const [plotdata, setPlotdata] = useState(null);
   useEffect(() => {
     if (data) {
-      setPlotdata(makeplotdata(data, plotcolors, scenario));
+      const newplotdata = makeplotdata(data, plotcolors, scenario);
+      setPlotdata(newplotdata);
     }
   }, [data, plotcolors, scenario]);
 
@@ -78,13 +79,17 @@ function LineChart(props) {
   const [datapoints, setDatapoints] = useState(null);
   const [mousexy, setMousexy] = useState([0, 0]);
   const [show, setShow] = useState(false);
-  const labels = plotdata ? plotdata.datasets.map((d, i) => d.label) : [];
-  //console.log("labels: ", labels);
 
   const customtooltip = (el) => {
-    //console.log("el: ", el);
-    //console.log("el.dataPoints: ", el.dataPoints); //tooltip element has quite a bit of stuff in it.
-    setDatapoints(el.dataPoints);
+    //el.dataPoints has quite a bit of stuff in it.
+    //but it doesnt have the name
+    let dps = el.dataPoints;
+    for (let i = 0; i < dps.length; i++) {
+      dps[i].name = plotdata.names[dps[i].datasetIndex];
+    }
+
+    //console.log("dps: ", dps);
+    setDatapoints(dps);
   };
 
   const options = makeoptions(customtooltip);
@@ -93,7 +98,6 @@ function LineChart(props) {
   const onLeave = () => setShow(false);
   const onMove = (e) => {
     let rect = e.currentTarget.getBoundingClientRect();
-    //console.log(rect)
     let x_max = window.innerWidth - rect.left - 360;
     let x = e.clientX - rect.left;
     let y = e.clientY - rect.top;
@@ -111,7 +115,7 @@ function LineChart(props) {
         onMouseMove={onMove}
       >
         {show && datapoints && (
-          <TooltipMoving xy={mousexy} datapoints={datapoints} labels={labels} />
+          <TooltipMoving xy={mousexy} datapoints={datapoints} />
         )}
         {plotdata && <Line data={plotdata} options={options} />}
       </Box>

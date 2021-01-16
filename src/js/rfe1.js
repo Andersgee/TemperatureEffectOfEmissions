@@ -126,7 +126,6 @@ export function makeplotdata(data, colors, scenario) {
   }
 
   let sumtemp = vecadd(temps);
-  console.log("sumtemp.length: ", sumtemp.length);
 
   let stackedtemps = [temps[0]];
   for (let i = 1; i < temps.length; i++) {
@@ -197,8 +196,10 @@ export function makeplotdata(data, colors, scenario) {
     });
   }
 
-  console.log("data.year: ", data.year);
+  const names = datasets.map((d) => d.label);
+
   const plotdata = {
+    names: names,
     labels: maybeexpandedyears(data, maxX),
     datasets: datasets,
   };

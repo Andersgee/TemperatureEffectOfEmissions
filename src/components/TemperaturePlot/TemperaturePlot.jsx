@@ -68,7 +68,6 @@ function LineChart(props) {
   const [plotdata, setPlotdata] = useState(null);
   useEffect(() => {
     if (data) {
-      console.log("startyear: ", startyear);
       setPlotdata(makeplotdata(data, plotcolors, startyear, percentage));
     }
   }, [data, plotcolors, startyear, percentage]);
@@ -80,7 +79,6 @@ function LineChart(props) {
   const indexlabels = plotdata ? plotdata.datasets.map((ds) => ds.label) : [];
 
   const customtooltip = (el) => {
-    //console.log(el); //tooltip element has quite a bit of stuff in it.
     setDatapoints(el.dataPoints);
   };
 
@@ -90,7 +88,6 @@ function LineChart(props) {
   const onLeave = () => setShow(false);
   const onMove = (e) => {
     let rect = e.currentTarget.getBoundingClientRect();
-    //console.log(rect)
     let x_max = window.innerWidth - rect.left - 350;
     let x = e.clientX - rect.left;
     let y = e.clientY - rect.top;

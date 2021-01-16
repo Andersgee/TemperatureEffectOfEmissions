@@ -68,6 +68,9 @@ function gaspercentages(gasesdatapoints, totaldatapoint) {
 }
 
 export default function TooltipMoving(props) {
+  //console.log("props.datapoints: ", props.datapoints);
+  //console.log("props.labels: ", props.labels);
+
   const year = props.datapoints[0].xLabel; //they all have the right year as xLabel
   const {
     gasesdatapoints,
@@ -75,7 +78,6 @@ export default function TooltipMoving(props) {
     scenariodatapoints,
   } = splitdatapoints(props.datapoints, props.labels);
 
-  console.log("scenariodatapoints: ", scenariodatapoints);
   const percentages = gaspercentages(gasesdatapoints, totaldatapoint);
 
   return (
@@ -91,13 +93,13 @@ export default function TooltipMoving(props) {
       }}
       bgcolor="#fff"
     >
-      <Typography>
+      <Typography component="span">
         <Box fontWeight={700}>{year}</Box>
       </Typography>
       {totaldatapoint && (
         <Box>
           <Typography>Contribution to temperature change</Typography>
-          <Typography>
+          <Typography component="span">
             <Box fontWeight={500}>
               Total: {Math.round(100000000 * totaldatapoint.yLabel) / 100} μC
             </Box>
@@ -110,7 +112,7 @@ export default function TooltipMoving(props) {
           {gasesdatapoints.map((dp, i) => (
             <Box key={i} display="flex" justifyContent="space-between">
               <Typography variant="body1">{dp.name}:</Typography>
-              <Typography>
+              <Typography component="span">
                 <Box fontWeight={500}>{percentages[i]}%</Box>
               </Typography>
             </Box>
@@ -126,7 +128,7 @@ export default function TooltipMoving(props) {
           {scenariodatapoints.map((dp, i) => (
             <Box key={i} display="flex" justifyContent="space-between">
               <Typography variant="body1">{dp.name}:</Typography>
-              <Typography>
+              <Typography component="span">
                 <Box fontWeight={500}>
                   {Math.round(100000000 * dp.yLabel) / 100} μC
                 </Box>

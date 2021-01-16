@@ -32,7 +32,7 @@ function ScenarioSettings(props) {
   const [checked, setChecked] = useState(true);
 
   const handleChecked = (e) => {
-    console.log("checked: ", e.target.checked);
+    console.log("SHOW IS NOW ", e.target.checked);
     setChecked(e.target.checked);
     setState({ scenario: { ...scenario, show: e.target.checked } });
   };
