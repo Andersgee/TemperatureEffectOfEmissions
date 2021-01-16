@@ -32,11 +32,6 @@ function vecadd(vs) {
 }
 
 export function rfe(gasname, tons) {
-  if (!ghgs.hasOwnProperty(gasname)) {
-    alert(`the gas ${gasname} is not supported`);
-    return [];
-  }
-
   const factor = ghgs[gasname].k;
   if (ghgs[gasname].longlived) {
     return vecmul(cumsum(tons), factor);

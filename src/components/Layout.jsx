@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Container, Box, Grid, Typography } from "@material-ui/core";
+import { Container, Box, Grid, Typography, Link } from "@material-ui/core";
 import Plot from "./Plot";
 import TemperaturePlot from "./TemperaturePlot";
 import useDefaultData from "../hooks/useData";
@@ -64,20 +64,25 @@ function Layout(props) {
                 <ScenarioSettings />
               </Grid>
             </Grid>
-
+            <Box display="flex" justifyContent="space-between">
+              <ColorPaletteButton onClick={togglepickers} />
+              <DownloadButton />
+            </Box>
+            {showpickers && <Colorpickers headings={parseddata.headings} />}
             <Plot />
             <Typography
               variant="subtitle2"
               color="textSecondary"
               align="center"
             >
-              Figure: description goes here
+              The temperature impact has been calculated using the methodology
+              described in{" "}
+              <Link href="https://www.nature.com/articles/nclimate1496">
+                “Equivalence of greenhouse-gas emissions for peak temperature
+                limits”
+              </Link>{" "}
+              by Smith et al.
             </Typography>
-            <Box display="flex" justifyContent="space-between">
-              <ColorPaletteButton onClick={togglepickers} />
-              <DownloadButton />
-            </Box>
-            {showpickers && <Colorpickers headings={parseddata.headings} />}
           </Box>
         )}
       </Container>

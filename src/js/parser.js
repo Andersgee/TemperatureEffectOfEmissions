@@ -1,4 +1,6 @@
 import XLSX from "xlsx";
+import { ghgs } from "./ghgs";
+import { warningtext } from "./utils";
 
 function trues(N) {
   return new Array(N).fill(true);
@@ -24,9 +26,27 @@ function columndata(parsed) {
     }
   }
 
+  //these are the supported indexes, use to filter the returned stuff
+  const supported = gasnames.map((gasname) => ghgs.hasOwnProperty(gasname));
+
+  //alert a warning text for unsupported gases.
+  const hasunsupported = supported.some((x) => x === false);
+  if (hasunsupported) {
+    let unsupportednames = gasnames.filter((x, i) => !supported[i]);
+    alert(warningtext(unsupportednames));
+  }
+
   const xlim = [0, year.length];
   const checked = trues(Ngases);
-  const cdata = { headings, gasnames, year, rawdata, xlim, checked };
+  const cdata = {
+    headings: headings.filter((x, i) => supported[i]),
+    gasnames: gasnames.filter((x, i) => supported[i]),
+    rawdata: rawdata.filter((x, i) => supported[i]),
+    checked: checked.filter((x, i) => supported[i]),
+    year,
+    xlim,
+  };
+  console.log("cdata: ", cdata);
   return cdata;
 }
 
