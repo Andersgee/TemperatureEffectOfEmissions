@@ -6,7 +6,6 @@ import Link from "../components/Link";
 export default function Notfound() {
   return (
     <>
-      <SEO title={"404"} />
       <Container>
         <Typography variant="body1">404 - Not found</Typography>
         <Link to="/">Go to the main page</Link>

@@ -35,10 +35,11 @@ function makeoptions(customtooltip) {
           ticks: {
             minRotation: 0,
             maxRotation: 0,
+            //autoskip: true,
+            //autoSkipPadding: 30,
+            maxTicksLimit: 13,
             //callback: function (value, index, values) {return value % 2 === 0 ? value : "";},
-            callback: (value, index, values) => {
-              return index % 2 === 0 ? value : null;
-            },
+            //callback: (value, index, values) => {return index % 5 === 0 ? value : null;},
           },
         },
       ],

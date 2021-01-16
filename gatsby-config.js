@@ -4,11 +4,11 @@ require("dotenv").config({
 
 module.exports = {
   siteMetadata: {
-    defaultTitle: `GasEmissionModelplot`,
-    titleTemplate: "%s - GasEmissionModelplot",
-    defaultDescription: `Temperature contribution of Gas Emissions`,
+    defaultTitle: `ClimateTargetExplorer`,
+    titleTemplate: "%s - ClimateTargetExplorer",
+    defaultDescription: `See temperature contribution for your emissions of different gases. Upload your own excel file.`,
     lang: `en`,
-    siteUrl: "https://github.com/andersgee/andywebstarter",
+    siteUrl: "https://www.climatetargetexplorer.info",
     defaultImage: "andyfx.png",
     author: "Anders Gustafsson",
   },
@@ -28,8 +28,8 @@ module.exports = {
     {
       resolve: `gatsby-plugin-manifest`,
       options: {
-        name: `GasEmissionModelplot`,
-        short_name: `GasEmissionModelplot`,
+        name: `ClimateTargetExplorer`,
+        short_name: `ClimateTargetExplorer`,
         start_url: `/`,
         background_color: `#663399`,
         theme_color: `#663399`,
