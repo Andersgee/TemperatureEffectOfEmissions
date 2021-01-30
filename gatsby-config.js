@@ -37,5 +37,21 @@ module.exports = {
         icon: `src/assets/images/andyfx.png`, // This path is relative to the root of the site.
       },
     },
+    {
+      resolve: `gatsby-plugin-google-gtag`,
+      options: {
+        trackingIds: [`${process.env.GTAG_MEASUREMENT_ID}`],
+        gtagConfig: {
+          anonymize_ip: true,
+          cookie_flags: "SameSite=None;Secure",
+          cookie_domain: "www.climatetargetxplorer.info",
+          cookie_expires: 0,
+        },
+        pluginConfig: {
+          head: false,
+          //exclude: ["/preview/**", "/do-not-track/me/too/"],
+        },
+      },
+    },
   ],
 };

@@ -1,0 +1,6 @@
+[build]
+command = "gatsby build"
+publish = "public/"
+
+[build.environment]
+GTAG_MEASUREMENT_ID = 'G-1Q6H0SB2M6'

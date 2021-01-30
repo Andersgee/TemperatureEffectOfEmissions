@@ -9,6 +9,7 @@
     "chart.js": "^2.9.4",
     "gatsby": "latest",
     "gatsby-image": "latest",
+    "gatsby-plugin-google-gtag": "^2.7.0",
     "gatsby-plugin-manifest": "^2.9.1",
     "gatsby-plugin-material-ui": "latest",
     "gatsby-plugin-react-helmet": "latest",
