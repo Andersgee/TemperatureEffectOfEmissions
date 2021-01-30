@@ -44,7 +44,7 @@ module.exports = {
         gtagConfig: {
           anonymize_ip: true,
           cookie_flags: "SameSite=None;Secure",
-          cookie_domain: "www.climatetargetxplorer.info",
+          cookie_domain: "www.climatetargetexplorer.info",
           cookie_expires: 0,
         },
         pluginConfig: {
